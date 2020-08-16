@@ -9,7 +9,7 @@ mlflow_save_model.workflow <- function(workflow,
 
   saveRDS(workflow, file.path(path, "workflow.rds"))
 
-  spec <- pull_workflow_spec(coffee_workflow)
+  spec <- pull_workflow_spec(workflow)
   model <- class(spec)[[1]] # adapted from workflows:::print_header
   engine <- spec$engine
   mode <- spec$mode
@@ -37,7 +37,7 @@ mlflow_save_model.model_fit <- function(model,
 
   saveRDS(model, file.path(path, "parsnip_model.rds"))
 
-  spec <- pull_workflow_spec(coffee_workflow)
+  spec <- model$spec
   model <- class(spec)[[1]] # adapted from workflows:::print_header
   engine <- spec$engine
   mode <- spec$mode
