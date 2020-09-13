@@ -54,6 +54,10 @@ mlflow_write_model_spec <- function(path, content) {
   )
 }
 
+mlflow_read_model_spec <- function(path) {
+  yaml::read_yaml(file.path(path, "MLmodel"))
+}
+
 mlflow_timestamp <- function() {
   withr::with_options(
     c(digits.secs = 2),
