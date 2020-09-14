@@ -149,7 +149,32 @@ require_package <- function(package) {
   }
 }
 
+#' Automatically log the parameters of a model
+#'
+#' Currently only implemented for \verb{parsnip} models and \verb{workflow}s.
+#'
+#' @param x A model of supported type.
+#' @param ... Further arguments passed to methods.
+#'
+#' @return The input model, x.
+#'
 #' @export
+#'
+#' @example \dontrun{
+#' library(mlflow)
+#' library(parsnip)
+#' library(magrittr)
+#' idx <- withr::with_seed(3809, sample(nrow(mtcars)))
+#' train <- mtcars[idx[1:25], ]
+#' test <- mtcars[idx[26:32], ]
+#' linear_model <- linear_reg(penalty = 0.2, mixture = 0.5) %>% set_engine("lm")
+#' with(mlflow_start_run(),
+#'   linear_model %>%
+#'     mlflow_autolog_params() %>%
+#'     fit(mpg ~ ., test)
+#' )
+#' # Will log parameters "penalty" = 0.2 and "mixture" = 0.5
+#' }
 mlflow_autolog_params <- function(x, ...) {
   UseMethod("mlflow_autolog_params")
 }
@@ -172,17 +197,20 @@ mlflow_autolog_params.model_spec <- function(x, ...) {
   x
 }
 
+# Under construction
 #' @export
 mlflow_autolog_metrics <- function(metrics, estimator = "standard") {
-  metrics %>% filter(.estimator == estimator) %>% pmap(
-    function(.metric, .estimator, .estimate) {
-      mlflow_log_metric(.metric, .estimate)
-    }
-  )
+  metrics %>% filter(.estimator == estimator) %>%
+    pmap(
+      function(.metric, .estimator, .estimate) {
+        mlflow_log_metric(.metric, .estimate)
+      }
+    )
   metrics
 }
 
 log_parsnip_args <- function(x, ...) {
+  # Parsnip arguments are stored as quosures
   if (!are_parsnip_args_finalised(x)) {
     stop("Model arguments must have final values, and cannot be untuned ",
          "parameters")
@@ -206,4 +234,3 @@ are_parsnip_args_finalised <- function(args) {
   )
   all(arg_environment_is_empty)
 }
-
