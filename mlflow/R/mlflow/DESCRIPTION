@@ -1,7 +1,7 @@
 Type: Package
 Package: mlflow
 Title: Interface to 'MLflow'
-Version: 1.10.1
+Version: 1.10.0
 Authors@R: c(
   person("Matei", "Zaharia", email = "matei@databricks.com", role = c("aut", "cre")),
   person("Javier", "Luraschi", email = "javier@rstudio.com", role = c("aut")),
@@ -41,11 +41,14 @@ Imports:
     yaml,
     zeallot
 Suggests: 
-  covr,
-  carrier,
-  keras,
-  lintr,
-  testthat,
-  stringi (< 1.4.4),
-  xgboost
+    covr,
+    carrier,
+    keras,
+    lintr,
+    testthat,
+    stringi (< 1.4.4),
+    xgboost,
+    parsnip,
+    workflows,
+    recipes
 RoxygenNote: 7.1.1
