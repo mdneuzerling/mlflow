@@ -18,6 +18,10 @@ mlflow_save_model.workflow <- function(workflow,
   engine <- spec$engine
   mode <- spec$mode
 
+  if (engine == "spark") {
+    stop("Spark models are not supported through the workflow flavor")
+  }
+
   model_spec$flavors <- append(model_spec$flavors, list(
     workflow = list(
       data = "workflow.rds",
@@ -45,6 +49,10 @@ mlflow_save_model.model_fit <- function(model,
   model <- class(spec)[[1]] # adapted from workflows:::print_header
   engine <- spec$engine
   mode <- spec$mode
+
+  if (engine == "spark") {
+    stop("Spark models are not supported through the parsnip flavor")
+  }
 
   model_spec$flavors <- append(model_spec$flavors, list(
     parsnip = list(
@@ -171,7 +179,7 @@ require_package <- function(package) {
 #' with(mlflow_start_run(),
 #'   linear_model %>%
 #'     mlflow_autolog_params() %>%
-#'     fit(mpg ~ ., test)
+#'     fit(mpg ~ ., train)
 #' )
 #' # Will log parameters "penalty" = 0.2 and "mixture" = 0.5
 #' }
